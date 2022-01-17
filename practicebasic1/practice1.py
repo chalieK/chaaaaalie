@@ -232,7 +232,7 @@
 # 5. 앞 쪽 http://부분은 고정된 위치이므로 처음 세자리를 끌어오는 슬라이싱 사용. 점 이후의 글자 수는 전체 글자 수 - 점 이전까지의 글자 수로 지정. 전체 글자수 - (앞의 고정된 글자 수 + 점 이후의 글자 수) = 가운데 글자 수
 
 # 정답 : replace, index 를 활용하여 형태를 미리 변환 
-# url = "http://google.co.kr"
+# url = "http://google.com"
 # my_str = url.replace("http://", "") #규칙 1 # print(my_str)
 # my_str = my_str[:my_str.index(".")] #규칙 2 # my_str[0:5] -> 0 ~ 5 직전까지. (0,1,2,3,4) # print(my_str)
 # password = my_str[:3] + str(len(my_str)) + str(my_str.count("e")) + "!"
@@ -300,3 +300,57 @@
 # print(num_list)
 
 # 사전(Dictionary)
+# from _typeshed import HasFileno
+
+
+# cabinet = {3:"유재석", 100:"김태호"}
+# print(cabinet[3])
+# print(cabinet[100])
+
+# print(cabinet.get(3))
+# print(cabinet[5]) # 5라는 키가 없어서 오류나고 프로그램 종료
+# print(cabinet.get(5, "사용가능")) # 사전에 5가있으면 5를 쓰고 없으면 사용가능 출력
+# print("Hi")
+# print(3 in cabinet) #true
+# print(5 in cabinet) #false in 사용하여 캐피넷 안에 있는지 없는지 확인가능
+
+# cabinet = {"A-3":"유재석", "B-100":"김태호"}
+# print(cabinet["A-3"])
+# print(cabinet["B-100"])
+
+# # 새 손님
+# print(cabinet)
+# cabinet["A-3"] = "김종국"
+# cabinet["C-20"] = "조세호" # 값 업데이트 및 추가 가능
+# print(cabinet)
+
+# # 간 손님(제거)
+# del cabinet["A-3"]
+# print(cabinet)
+
+# # key 들만 출력
+# print(cabinet.keys())
+
+# # value 들만 출력
+# print(cabinet.values())
+
+# # key, value 쌍으로 출력
+# print(cabinet.items())
+
+# # 목욕탕 폐점
+# cabinet.clear()
+# print(cabinet)
+
+# 튜플 : 수정 x, 변경되지않는 목록 사용
+# menu = ("돈까스", "치즈까스")
+# print(menu[0])
+# print(menu[1])
+
+# # name = "김종국"
+# # age = 20
+# # hobby = "코딩"
+# # print(name, age, hobby)
+
+# (name, age, hobby) = ("김종국", 20, "코딩")
+# print(name, age, hobby)
+
