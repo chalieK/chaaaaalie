@@ -40,7 +40,6 @@ enemy_height = enemy_size[1] # 캐릭터의 세로크기
 enemy_x_pos = (screen_width / 2) - (enemy_width / 2) # 화면 가로의 절반에 해당하는 위치에 캐릭터 위치(가로)
 enemy_y_pos = (screen_height / 2) - (enemy_height / 2) # 화면 세로크기 가장 아래에 해당하는 곳에 위치(세로)
 
-
 # 폰트 정의
 game_font = pygame.font.Font(None, 40)  # 폰트 객체 생성 (폰트, 크기)
 
@@ -49,7 +48,6 @@ total_time = 10
 
 # 시작 시간 정보
 start_ticks = pygame.time.get_ticks() # 시작 tick 을 받아옴
-
 
 # 이벤트 루프가 실행되고있어야 창이 꺼지지 않음
 running = True # 게임이 진행중인가?
