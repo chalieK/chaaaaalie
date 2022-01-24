@@ -34,7 +34,7 @@ character_width = character_size[1]
 character_x_pos = (screen_width / 2) - (character_width / 2)
 character_y_pos = screen_height - character_height
 
-character_speed = 0.5
+character_speed = 0.7
 
 # 적 캐릭터
 enemy = pygame.image.load("C:\\Users\\user\\Desktop\\py_workspace\\project_ddong\\enemy.png")
@@ -44,14 +44,15 @@ enemy_width = enemy_size[1]
 enemy_x_pos = random.randrange(10, 440) 
 enemy_y_pos = 0
 
-enemy_speed = 20
+enemy_speed = 40
 
 game_font = pygame.font.Font(None, 40)
 
-total_time = 10
+total_time = 30
 
 start_ticks = pygame.time.get_ticks()
 
+pygame.time.delay(500)
 running = True 
 while running:
     dt = clock.tick(30)
@@ -103,7 +104,7 @@ while running:
 
     # 충돌 체크
     if character_rect.colliderect(enemy_rect):
-        print("게임 오버")
+        print("게임 오버", str(score), "점")
         running = False
 
 
