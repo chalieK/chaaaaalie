@@ -1,4 +1,3 @@
-import random
 import pygame
 ############################################################
 # 기본 초기화(반드시 해야하는것들)
@@ -47,45 +46,33 @@ weapon = pygame.image.load("C:\\Users\\user\\Desktop\\py_workspace\\project_pang
 weapon_size = weapon.get_rect().size
 weapon_width = weapon_size[0]
 weapon_height = weapon_size[1]
-weapon_x_pos = character_x_pos + (character_x_pos * 1/3) # 스페이스를 누르면 나타나는 걸로 다시 만들어야함
-weapon_y_pos = screen_height
 
-# 무기 구현하기 : 캐릭터 위치에서부터 위로 올라감. 아이디어는 좋지만 작동 x
 
-weapon_speed = 1
+# 무기 구현하기 : 작동 x 스페이스바 입력이 안되는것같음
+weapons = [] # 여러발 발사
+weapon_speed = 15
 
-weapon_load = False
+
 
 # 볼 불러오기
-balloon1 = pygame.image.load("C:\\Users\\user\\Desktop\\py_workspace\\project_panggame\\balloon1.png")
-balloon1_size = balloon1.get_rect().size
-balloon1_width = balloon1_size[0]
-balloon1_height = balloon1_size[1]
-balloon1_x_pos = random.randrange(0, 550)
-balloon1_y_pos = random.randrange(0, 100)
+ball_images = [
+    pygame.image.load("C:\\Users\\user\\Desktop\\py_workspace\\project_panggame\\balloon1.png"),
+    pygame.image.load("C:\\Users\\user\\Desktop\\py_workspace\\project_panggame\\balloon2.png"),
+    pygame.image.load("C:\\Users\\user\\Desktop\\py_workspace\\project_panggame\\balloon3.png"),
+    pygame.image.load("C:\\Users\\user\\Desktop\\py_workspace\\project_panggame\\balloon4.png")
+]
 
-balloon2 = pygame.image.load("C:\\Users\\user\\Desktop\\py_workspace\\project_panggame\\balloon2.png")
-balloon2_size = balloon2.get_rect().size
-balloon2_width = balloon2_size[0]
-balloon2_height = balloon2_size[1]
-# balloon2_x_pos = none
-# balloon2_y_pos = None
+ball_speed_y = [-18, -15, -12, -9]
+balls = []
 
-balloon3 = pygame.image.load("C:\\Users\\user\\Desktop\\py_workspace\\project_panggame\\balloon3.png")
-balloon3_size = balloon3.get_rect().size
-balloon3_width = balloon3_size[0]
-balloon3_height = balloon3_size[1]
-# balloon3_x_pos = None
-# balloon3_y_pos = None
-
-balloon4 = pygame.image.load("C:\\Users\\user\\Desktop\\py_workspace\\project_panggame\\balloon4.png")
-balloon4_size = balloon4.get_rect().size
-balloon4_width = balloon4_size[0]
-balloon4_height = balloon4_size[1]
-# balloon4_x_pos = None
-# balloon4_y_pos = None
-
-
+balls.append({
+    "pos_x":50,
+    "pos_y":50,
+    "img_idx":0,
+    "to_x":3,
+    "to_y":-6,
+    "init_spd_y":ball_speed_y[0]
+})
 
 running = True 
 while running:
@@ -102,27 +89,48 @@ while running:
                 character_to_x -= character_speed
             elif event.key == pygame.K_RIGHT:
                 character_to_x += character_speed
-            elif event.type == pygame.K_SPACE: 
-                weapon_load = True
+            elif event.key == pygame.K_SPACE: 
+                weapon_x_pos = character_x_pos + (character_width / 2) - (weapon_width / 2) # 스페이스를 누르면 나타나는 걸로 다시 만들어야함
+                weapon_y_pos = character_y_pos
+                weapons.append([weapon_x_pos, weapon_y_pos])
 
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                 character_to_x = 0
     
     character_x_pos += character_to_x*dt
-    weapon_y_pos += weapon_speed*dt
+        
+    # 무기 위치 조정
+    weapons = [[w[0], w[1] - weapon_speed] for w in weapons] # 무기 위치 갱신
+    weapons = [[w[0], w[1]] for w in weapons if w[1] > 0] # 천장에 닿은 무기 없애기
+
     # 볼 위치 정의
-    
+    for ball_idx, ball_val in enumerate(balls):
+        ball_pos_x = ball_val["pos_x"]
+        ball_pos_y = ball_val["pos_y"]
+        ball_img_idx = ball_val["img_idx"]
+
+        ball_size = ball_images[ball_img_idx].get_rect().size
+        ball_width = ball_size[0]
+        ball_height = ball_size[1]
+
     # 캐릭터 경계값 
     if character_x_pos < 0:
         character_x_pos = 0
     elif character_x_pos > screen_width - character_width:
         character_x_pos = screen_width - character_width
     
-    if balloon1_x_pos < 0:
-        balloon1_x_pos = 0
-    elif balloon1_x_pos > screen_width - balloon1_width:
-        balloon1_x_pos = screen_width - balloon1_width
+    # 볼 경계값
+    if ball_pos_x < 0 or ball_pos_x > screen_width - ball_width:
+        ball_val["to_x"] = ball_val["to_x"]*-1 # 벽에 부딪히면 반대로 튀게끔
+    
+    if ball_pos_y >= screen_height - stage_height - ball_height:
+        ball_val["to_y"] = ball_val["init_spd_y"]
+    else: 
+        ball_val["to_y"] += 0.5
+    
+        ball_val["pos_x"] += ball_val["to_x"]
+        ball_val["pos_y"] += ball_val["to_y"]
 
 
     # 4. 충돌 처리
@@ -139,19 +147,19 @@ while running:
     screen.blit(character, (character_x_pos, character_y_pos))
 
     # 무기 그리기
-    if weapon_load == True:
+    for weapon_x_pos, weapon_y_pos in weapons:
         screen.blit(weapon, (weapon_x_pos, weapon_y_pos))
-        weapon_y_pos -= weapon_speed
-    elif weapon_y_pos == 0:
-        weapon_load = False
 
     # 볼 그리기
-    screen.blit(balloon1, (balloon1_x_pos, balloon1_y_pos))
-    # screen.blit(balloon2, (0, 0))
-    # screen.blit(balloon3, (0, 0))
-    # screen.blit(balloon4, (0, 0))
-    
+    for idx, val in enumerate(balls):
+        ball_pos_x = val["pos_x"]
+        ball_pos_y = val["pos_y"]
+        ball_img_idx = val["img_idx"]
+        screen.blit(ball_images[ball_img_idx], (ball_pos_x, ball_pos_y))
+
     pygame.display.update() # 화면을 계속해서 그려주기!
 
 
 pygame.quit()
+
+# 무기 구현과 공 작동에서 혼자 하기 실패
